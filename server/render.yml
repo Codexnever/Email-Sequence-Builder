@@ -1,0 +1,25 @@
+# Exported from Render on 2025-04-11T22:05:24Z
+services:
+- type: web
+  name: Email-Sequence-Builder
+  runtime: node
+  repo: https://github.com/Codexnever/Email-Sequence-Builder
+  plan: free
+  envVars:
+  - key: MONGODB_URI_TEST
+    sync: false
+  - key: EMAIL_PASS
+    sync: false
+  - key: EMAIL_USER
+    sync: false
+  - key: EMAIL_SERVICE
+    sync: false
+  - key: JWT_SECRET
+    sync: false
+  - key: MONGODB_URI
+    sync: false
+  region: virginia
+  buildCommand: yarn
+  startCommand: npm run dev
+  rootDir: ./server/
+version: "1"
