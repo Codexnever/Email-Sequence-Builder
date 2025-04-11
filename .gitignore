@@ -6,6 +6,9 @@ server/node_modules/
 client/.env
 server/.env
 
+client/package-lock.json/
+server/package-lock.json/
+
 # Ignore system/macOS stuff
 .DS_Store
 
@@ -14,4 +17,6 @@ server/.env
 
 # Optional: Next.js build output
 client/.next/
+
 .vercel/
+"package-lock.json" 
