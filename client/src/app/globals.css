@@ -1,0 +1,154 @@
+@import "tailwindcss";
+/**
+ *
+ * This file imports Tailwind’s base, components, and utilities.
+ */
+
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+ @theme {
+   --color-primary: oklch(0.5 0.2 240);
+   --color-primary-foreground: oklch(1 0 0);
+ 
+   --color-secondary: oklch(0.95 0.05 240);
+   --color-secondary-foreground: oklch(0.2 0.05 240);
+ 
+   --color-blue-50: oklch(0.97 0.02 240);
+   --color-blue-100: oklch(0.94 0.03 240);
+   --color-blue-200: oklch(0.89 0.07 240);
+   --color-blue-300: oklch(0.84 0.11 240);
+   --color-blue-400: oklch(0.74 0.15 240);
+   --color-blue-500: oklch(0.64 0.19 240);
+   --color-blue-600: oklch(0.54 0.18 240);
+   --color-blue-700: oklch(0.44 0.16 240);
+   --color-blue-800: oklch(0.34 0.11 240);
+   --color-blue-900: oklch(0.24 0.06 240);
+ 
+   --color-amber-50: oklch(0.97 0.02 80);
+   --color-amber-100: oklch(0.94 0.03 80);
+   --color-amber-200: oklch(0.89 0.07 80);
+   --color-amber-300: oklch(0.84 0.11 80);
+   --color-amber-400: oklch(0.74 0.15 80);
+   --color-amber-500: oklch(0.64 0.19 80);
+   --color-amber-600: oklch(0.54 0.18 80);
+   --color-amber-700: oklch(0.44 0.16 80);
+   --color-amber-800: oklch(0.34 0.11 80);
+   --color-amber-900: oklch(0.24 0.06 80);
+ 
+   --color-green-50: oklch(0.97 0.02 140);
+   --color-green-100: oklch(0.94 0.03 140);
+   --color-green-200: oklch(0.89 0.07 140);
+   --color-green-300: oklch(0.84 0.11 140);
+   --color-green-400: oklch(0.74 0.15 140);
+   --color-green-500: oklch(0.64 0.19 140);
+   --color-green-600: oklch(0.54 0.18 140);
+   --color-green-700: oklch(0.44 0.16 140);
+   --color-green-800: oklch(0.34 0.11 140);
+   --color-green-900: oklch(0.24 0.06 140);
+ 
+   --color-destructive: oklch(0.64 0.28 30);
+   --color-destructive-foreground: oklch(0.98 0.01 0);
+ 
+   /* Background & Foreground */
+   --color-background: oklch(1 0 0);
+   --color-foreground: oklch(0.2 0.02 240);
+ 
+   /* Borders, Cards, Inputs */
+   --color-border: oklch(0.85 0.02 240);
+   --color-input: oklch(0.85 0.02 240);
+   --color-ring: oklch(0.7 0.1 240);
+   --color-card: oklch(1 0 0);
+   --color-card-foreground: oklch(0.2 0.02 240);
+   --color-popover: oklch(1 0 0);
+   --color-popover-foreground: oklch(0.2 0.02 240);
+   --color-muted: oklch(0.96 0.02 240);
+   --color-muted-foreground: oklch(0.55 0.02 240);
+   --color-accent: oklch(0.96 0.02 240);
+   --color-accent-foreground: oklch(0.2 0.02 240);
+ 
+   /* Radius */
+   --radius: 0.5rem;
+ 
+   /* Breakpoints */
+   --breakpoint-sm: 640px;
+   --breakpoint-md: 768px;
+   --breakpoint-lg: 1024px;
+   --breakpoint-xl: 1280px;
+   --breakpoint-2xl: 1536px;
+ }
+ 
+ @layer base {
+   :root {
+     --background: oklch(1 0 0);
+     --foreground: oklch(0.2 0.02 240);
+ 
+     --card: oklch(1 0 0);
+     --card-foreground: oklch(0.2 0.02 240);
+ 
+     --popover: oklch(1 0 0);
+     --popover-foreground: oklch(0.2 0.02 240);
+ 
+     --primary: oklch(0.5 0.2 240);
+     --primary-foreground: oklch(1 0 0);
+ 
+     --secondary: oklch(0.95 0.05 240);
+     --secondary-foreground: oklch(0.2 0.05 240);
+ 
+     --muted: oklch(0.96 0.02 240);
+     --muted-foreground: oklch(0.55 0.02 240);
+ 
+     --accent: oklch(0.96 0.02 240);
+     --accent-foreground: oklch(0.2 0.02 240);
+ 
+     --destructive: oklch(0.64 0.28 30);
+     --destructive-foreground: oklch(0.98 0.01 0);
+ 
+     --border: oklch(0.85 0.02 240);
+     --input: oklch(0.85 0.02 240);
+     --ring: oklch(0.7 0.1 240);
+ 
+     --radius: 0.5rem;
+   }
+ 
+   .dark {
+     --background: oklch(0.2 0.02 240);
+     --foreground: oklch(1 0 0);
+ 
+     --card: oklch(0.2 0.02 240);
+     --card-foreground: oklch(1 0 0);
+ 
+     --popover: oklch(0.2 0.02 240);
+     --popover-foreground: oklch(1 0 0);
+ 
+     --primary: oklch(1 0 0);
+     --primary-foreground: oklch(0.5 0.2 240);
+ 
+     --secondary: oklch(0.2 0.05 240);
+     --secondary-foreground: oklch(1 0 0);
+ 
+     --muted: oklch(0.55 0.02 240);
+     --muted-foreground: oklch(0.96 0.02 240);
+ 
+     --accent: oklch(0.55 0.02 240);
+     --accent-foreground: oklch(1 0 0);
+ 
+     --destructive: oklch(0.98 0.01 0);
+     --destructive-foreground: oklch(1 0 0);
+ 
+     --border: oklch(0.55 0.02 240);
+     --input: oklch(0.55 0.02 240);
+     --ring: oklch(0.7 0.1 240);
+   }
+ }
+ 
+ @layer base {
+   * {
+     @apply border-border;
+   }
+   body {
+     @apply bg-background text-foreground;
+   }
+ }
+ 
