@@ -122,7 +122,12 @@ agenda.define("send email", async (job) => {
   })()
 
 const authRoutes = require("./routes/auth")
-app.use("/api/auth", authRoutes)
+try {
+  app.use("/api/auth", authRoutes);
+  // Other routes
+} catch (error) {
+  console.error("Route registration error:", error);
+}
 
 app.post("/api/flows", async (req, res) => {
   try {
