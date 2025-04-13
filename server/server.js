@@ -45,7 +45,6 @@ let transporter
 // Create a test account on Ethereal for development
 async function setupTransporter() {
   if (process.env.EMAIL_SERVICE && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-    // If email credentials are provided, set up the real transporter
     transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE,
       auth: {
@@ -65,7 +64,6 @@ async function setupTransporter() {
     // If no email credentials, use Ethereal for testing
     try {
       const testAccount = await nodemailer.createTestAccount()
-
       transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
         port: 587,
@@ -75,11 +73,6 @@ async function setupTransporter() {
           pass: testAccount.pass,
         },
       })
-
-      // console.log("Ethereal Email credentials:")
-      // console.log("Username:", testAccount.user)
-      // console.log("Password:", testAccount.pass)
-      // console.log("View emails at: https://ethereal.email")
     } catch (error) {
       console.error("Failed to create Ethereal test account:", error)
       setupMockTransporter()
@@ -88,7 +81,7 @@ async function setupTransporter() {
 }
 
 function setupMockTransporter() {
-  console.log("Using mock email transport for development")
+  // console.log("Using mock email transport for development")
   transporter = {
     sendMail: (mailOptions) => {
       return Promise.resolve({ messageId: "mock-email-id" })
@@ -100,13 +93,12 @@ setupTransporter().catch(console.error)
 
 agenda.define("send email", async (job) => {
   const { to, subject, body } = job.attrs.data
-
+  // console.log(`Attempting to send email to: ${to} with subject: ${subject}`)
   try {
     if (!to || !subject || !body) {
       console.log("Missing email data, skipping send")
       return
     }
-
 
     const mailOptions = {
       from: process.env.EMAIL_USER || "test@example.com",
@@ -116,18 +108,20 @@ agenda.define("send email", async (job) => {
     }
 
     const info = await transporter.sendMail(mailOptions)
+    // console.log("Email sent:", info)
     return info
   } catch (error) {
     console.error("Error sending email:", error)
     throw error
   }
 })
-;(async () => {
-  await agenda.start()
-})()
+
+  ; (async () => {
+    await agenda.start()
+    console.log("Agenda started")
+  })()
 
 const authRoutes = require("./routes/auth")
-
 app.use("/api/auth", authRoutes)
 
 app.post("/api/flows", async (req, res) => {
@@ -153,11 +147,9 @@ app.post("/api/schedule-email", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" })
     }
 
-    // Calculate delay in milliseconds
     const delayMs = calculateDelayMs(delay, unit)
-    console.log(`Scheduling email with delay: ${delay} ${unit} (${delayMs}ms)`)
+    // console.log(`Scheduling email with delay: ${delay} ${unit} (${delayMs}ms)`)
 
-    // Schedule the email
     await agenda.schedule(new Date(Date.now() + delayMs), "send email", {
       to,
       subject,
@@ -174,10 +166,7 @@ app.post("/api/schedule-email", async (req, res) => {
 // Helper function to calculate delay in milliseconds
 function calculateDelayMs(delay, unit) {
   let delayMs
-
   const delayNum = Number(delay) || 1
-
-  // Convert unit to lowercase for case-insensitive comparison
   const unitLower = String(unit).toLowerCase()
 
   switch (unitLower) {
@@ -194,89 +183,86 @@ function calculateDelayMs(delay, unit) {
       delayMs = delayNum * 24 * 60 * 60 * 1000
       break
     default:
-      console.log(`Unrecognized time unit: ${unit}, defaulting to hours`)
+      // console.log(`Unrecognized time unit: ${unit}, defaulting to hours`)
       delayMs = delayNum * 60 * 60 * 1000
   }
-
+  // console.log(`Calculated delay: ${delayMs} milliseconds for ${delayNum} ${unitLower}`)
   return delayMs
 }
 
-// Helper function to process flow and schedule emails
 async function processFlow(flow) {
-  const { nodes, edges } = flow
+  const { nodes, edges } = flow;
 
   if (!Array.isArray(nodes) || !Array.isArray(edges)) {
-    console.error("Invalid flow data: nodes or edges is not an array")
-    return
+    console.error("Invalid flow data: nodes or edges is not an array");
+    return;
   }
 
-  const emailNodes = nodes.filter((node) => node.type === "emailNode")
+  const emailNodes = nodes.filter((node) => node.type === "emailNode");
+  // console.log(`Found ${emailNodes.length} email node(s)`);
 
   if (emailNodes.length === 0) {
-    console.log("No email nodes found in the flow")
-    return
+    // console.log("No email nodes found in the flow");
+    return;
   }
 
   for (const emailNode of emailNodes) {
-    const { data } = emailNode
+    const { data } = emailNode;
 
     if (!data || !data.recipient || !data.subject || !data.body) {
-      // console.log(`Skipping email node ${emailNode.id} due to missing data:`, data)
-      continue
+      console.log(`Skipping email node ${emailNode.id} due to missing data:`, data);
+      continue;
     }
 
-    const incomingEdges = edges.filter((edge) => edge.target === emailNode.id)
-    // console.log(`Processing email node ${emailNode.id} with ${incomingEdges.length} incoming edges`)
+    // First, search for an incoming edge from a delay node.
+    let delayEdge = edges.find(
+      (edge) =>
+        edge.target === emailNode.id &&
+        nodes.find((node) => node.id === edge.source && node.type === "delayNode")
+    );
 
-    // If no incoming edges, schedule immediately
-    if (incomingEdges.length === 0) {
-      await agenda.now("send email", {
-        to: data.recipient,
-        subject: data.subject,
-        body: data.body,
-      })
-      continue
+    if (!delayEdge) {
+      delayEdge = edges.find(
+        (edge) =>
+          edge.source === emailNode.id &&
+          nodes.find((node) => node.id === edge.target && node.type === "delayNode")
+      );
     }
 
-    for (const edge of incomingEdges) {
-      const sourceNode = nodes.find((node) => node.id === edge.source)
+    if (delayEdge) {
+      const delayNode =
+        emailNode.id === delayEdge.target
+          ? nodes.find((node) => node.id === delayEdge.source)
+          : nodes.find((node) => node.id === delayEdge.target);
 
-      if (!sourceNode) {
-        // console.log(`Source node not found for edge ${edge.id}`)
-        continue
-      }
-
-
-      if (sourceNode.type === "delayNode") {
-        const delayData = sourceNode.data
-        if (!delayData) {
-          await agenda.schedule(new Date(Date.now() + 3600000), "send email", {
-            to: data.recipient,
-            subject: data.subject,
-            body: data.body,
-          })
-          continue
-        }
-      //Calculate delay in milliseconds
-        const delayMs = calculateDelayMs(delayData.delay, delayData.unit)
-
+      if (delayNode && delayNode.data && delayNode.data.delay && delayNode.data.unit) {
+        const delayMs = calculateDelayMs(delayNode.data.delay, delayNode.data.unit);
         // console.log(
-        //   `Scheduling email to ${data.recipient} with delay of ${delayData.delay} ${delayData.unit} (${delayMs}ms)`,
-        // )
+        //   `Scheduling email to ${data.recipient} with delay from node ${delayNode.id}: ${delayNode.data.delay} ${delayNode.data.unit} (${delayMs}ms)`
+        // );
         await agenda.schedule(new Date(Date.now() + delayMs), "send email", {
           to: data.recipient,
           subject: data.subject,
           body: data.body,
-        })
+        });
       } else {
-        // If not from a delay node, schedule immediately
-        // console.log(`Source node is not a delay node, scheduling email to ${data.recipient} immediately`)
-        await agenda.now("send email", {
+        // console.log(
+        //   `Delay node ${delayNode ? delayNode.id : "unknown"} is missing delay info. Scheduling with default delay of 1 hour.`
+        // );
+        await agenda.schedule(new Date(Date.now() + 3600000), "send email", {
           to: data.recipient,
           subject: data.subject,
           body: data.body,
-        })
+        });
       }
+    } else {
+      // No delay node found; schedule immediately.
+      // console.log(`No delay node found for email node ${emailNode.id}; scheduling immediately.`);
+      await agenda.now("send email", {
+        to: data.recipient,
+        subject: data.subject,
+        body: data.body,
+      });
     }
   }
 }

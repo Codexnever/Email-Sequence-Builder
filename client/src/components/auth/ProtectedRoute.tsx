@@ -23,7 +23,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
           throw new Error("No token found")
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/user`, {
+        const domain = window.location.origin
+      const response = await fetch(`${domain}/api/auth/user`, {
           headers: {
             "x-auth-token": token,
           },

@@ -31,7 +31,8 @@ export default function LoginForm() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
+      const domain = window.location.origin
+      const response = await fetch(`${domain}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +81,7 @@ console.log("Response:", response)
               id="email"
               name="email"
               type="email"
-              placeholder="name@example.com"
+              placeholder="Enter your email"
               value={email}
               onChange={onChange}
               required

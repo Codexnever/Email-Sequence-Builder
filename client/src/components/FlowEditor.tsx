@@ -115,8 +115,8 @@ const FlowEditor = () => {
 
 
       const delayNodes = flowData.nodes.filter((node: any) => node.type === "delayNode")
-
-      const response = await fetch("http://localhost:5000/api/flows", {
+      const domain = window.location.origin
+      const response = await fetch(`${domain}/api/flows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import FlowEditor from "../../components/FlowEditor"
 import ProtectedRoute from "../../components/auth/ProtectedRoute"
 import { Toaster } from "../../components/ui/toaster"
-import { Mail, Plus, LogOut } from "lucide-react"
+import { Mail, ArrowRight, LogOut } from "lucide-react"
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
@@ -64,18 +64,24 @@ export default function Dashboard() {
 
       {!showEditor ? (
         <div className="container mx-auto py-12 px-4">
-          <Card className="max-w-3xl mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl">Your Email Sequences</CardTitle>
-              <CardDescription>Create and manage your email marketing sequences</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button size="lg" onClick={() => setShowEditor(true)}>
-                <Plus className="mr-2 h-4 w-4" /> Create New Sequence
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+                <Card className="max-w-3xl mx-auto">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Welcome to Email Sequence Builder</CardTitle>
+                    <CardDescription>
+                      Design and implement email marketing sequences using a visual flowchart interface.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col items-center">
+                    <p className="mb-6 text-center">
+                      Create powerful email sequences by dragging and connecting nodes in our visual editor. Schedule
+                      automated emails with custom delays and track your marketing campaigns effectively.
+                    </p>
+                    <Button size="lg" onClick={() => setShowEditor(true)}>
+                      Create New Sequence <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
       ) : (
         <FlowEditor />
       )}
