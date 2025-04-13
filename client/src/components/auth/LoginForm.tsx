@@ -31,15 +31,13 @@ export default function LoginForm() {
     setIsLoading(true)
 
     try {
-      const domain = window.location.origin
-      const response = await fetch(`${domain}/api/auth/login`, {
+      const response = await fetch(`${process.env.domain}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       })
-console.log("Response:", response)
       const data = await response.json()
 
       if (!response.ok) {
