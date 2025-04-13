@@ -7,9 +7,16 @@ const auth = require("../middleware/auth")
 
 /**
  * This file contains the routes for user authentication
-*/
+ * Routes: /register, /login, and /user (protected)
+ */
 
-// @route   POST api/auth/register
+// Helper to check if JWT_SECRET is defined
+if (!process.env.JWT_SECRET) {
+  console.error("FATAL ERROR: JWT_SECRET is not defined.")
+  process.exit(1)
+}
+
+// @route   POST /api/auth/register
 // @desc    Register user
 // @access  Public
 router.post(
@@ -34,7 +41,7 @@ router.post(
         return res.status(400).json({ errors: [{ msg: "User already exists" }] })
       }
 
-      // new user
+      // Create new user
       user = new User({
         name,
         email,
@@ -50,8 +57,12 @@ router.post(
         },
       }
 
+      // Sign JWT and send response
       jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" }, (err, token) => {
-        if (err) throw err
+        if (err) {
+          console.error("JWT sign error:", err)
+          return res.status(500).send("Server error")
+        }
         res.json({ token })
       })
     } catch (err) {
@@ -61,12 +72,15 @@ router.post(
   },
 )
 
-// @route   POST api/auth/login
+// @route   POST /api/auth/login
 // @desc    Authenticate user & get token
 // @access  Public
 router.post(
   "/login",
-  [check("email", "Please include a valid email").isEmail(), check("password", "Password is required").exists()],
+  [
+    check("email", "Please include a valid email").isEmail(),
+    check("password", "Password is required").exists(),
+  ],
   async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -76,15 +90,14 @@ router.post(
     const { email, password } = req.body
 
     try {
-      // if user exists
+      // Check if user exists
       const user = await User.findOne({ email })
-
       if (!user) {
         return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] })
       }
 
+      // Check password match (assuming comparePassword method is implemented)
       const isMatch = await user.comparePassword(password)
-
       if (!isMatch) {
         return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] })
       }
@@ -96,7 +109,10 @@ router.post(
       }
 
       jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" }, (err, token) => {
-        if (err) throw err
+        if (err) {
+          console.error("JWT sign error:", err)
+          return res.status(500).send("Server error")
+        }
         res.json({ token })
       })
     } catch (err) {
@@ -106,11 +122,12 @@ router.post(
   },
 )
 
-// @route   GET api/auth/user
+// @route   GET /api/auth/user
 // @desc    Get user data
 // @access  Private
 router.get("/user", auth, async (req, res) => {
   try {
+    // Assuming auth middleware attaches the user info in req.user
     const user = await User.findById(req.user.id).select("-password")
     res.json(user)
   } catch (err) {
