@@ -21,13 +21,13 @@ app.use(express.json())
  */
 
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/email-sequence-builder")
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err))
 
 const agenda = new Agenda({
   db: {
-    address: process.env.MONGODB_URI || "mongodb://localhost:27017/email-sequence-builder",
+    address: process.env.MONGODB_URI,
     collection: "jobs",
   },
 })
