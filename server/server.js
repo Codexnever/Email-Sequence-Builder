@@ -124,7 +124,6 @@ agenda.define("send email", async (job) => {
 const authRoutes = require("./routes/auth")
 try {
   app.use("/api/auth", authRoutes);
-  // Other routes
 } catch (error) {
   console.error("Route registration error:", error);
 }
@@ -275,9 +274,6 @@ async function processFlow(flow) {
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")))
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"))
-  })
 }
 
 const PORT = process.env.PORT || 5000
