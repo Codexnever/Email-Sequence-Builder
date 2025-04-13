@@ -129,42 +129,42 @@ Sure bro! Here's an extended and more polished version of your **Future Improvem
 
 ## 🚀 Future Improvements
 
-- **📚 Email Template Library**  
+- ** Email Template Library**  
   A collection of pre-designed email templates that users can drag & drop or customize for faster campaign creation.
 
-- **📊 Analytics Dashboard**  
+- ** Analytics Dashboard**  
   Visual insights into campaign performance — open rates, click-through rates, bounce rates, and unsubscribe trends.
 
-- **🔀 Advanced Node Types**  
+- ** Advanced Node Types**  
   Add more logic-based nodes like:
   - Conditional branches (if opened, then →)  
   - Goal completion triggers  
   - Wait for reply / Smart delay nodes
 
-- **📥 Import Contacts from CSV**  
+- ** Import Contacts from CSV**  
   Let users bulk upload email lists with CSV support and basic data validation.
 
-- **⏱️ Rate Limiting & Smart Throttling**  
+- ** Rate Limiting & Smart Throttling**  
   Prevent spam, control email send rate, and add intelligent delays between email sends.
 
-- **🔐 Security Enhancements**  
+- ** Security Enhancements**  
   - API key/token management  
   - Role-based access controls  
   - Audit logs and suspicious activity alerts
 
-- **📆 Campaign Scheduler**  
+- ** Campaign Scheduler**  
   Let users pick exact start dates & times for sequences, or even sync with timezones.
 
-- **🔁 A/B Testing**  
+- ** A/B Testing**  
   Support for testing different subject lines or email bodies to see what performs better.
 
-- **📬 Sequence Pause/Resume**  
+- ** Sequence Pause/Resume**  
   Allow pausing and resuming email sequences per user or globally.
 
-- **🧠 AI-Assisted Suggestions**  
+- ** AI-Assisted Suggestions**  
   Recommend subject lines or email body improvements using OpenAI.
 
-- **📦 Export Campaign Reports**  
+- ** Export Campaign Reports**  
   Let users export campaign analytics as PDF/CSV for sharing with teams or clients.
 
 
