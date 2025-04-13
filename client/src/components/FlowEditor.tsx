@@ -115,7 +115,7 @@ const FlowEditor = () => {
 
 
       const delayNodes = flowData.nodes.filter((node: any) => node.type === "delayNode")
-      const response = await fetch(`${process.env.domain}/api/flows`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_PROD}/api/flows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

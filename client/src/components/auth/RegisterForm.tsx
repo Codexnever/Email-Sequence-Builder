@@ -41,7 +41,7 @@ export default function RegisterForm() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.domain}/api/auth/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_PROD}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
